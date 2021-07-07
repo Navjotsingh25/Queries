@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Blog categorys </h1>
+<hr>
+
+
+{% for cats in category_list%}
+
+<div>
+    
+                <h3>    <a href= "{% url 'category' cats|slugify %}" style="text-decoration: none;" > {{ cats }}</a> </h3>
+
+</div>
+    {% endfor %}
+
+
+    {% endblock %}

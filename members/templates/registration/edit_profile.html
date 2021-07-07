@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+ {% block title %}Edit Profie{% endblock title %}
+ {% block content %}
+
+{% if user.is_authenticated %} 
+<br/>
+<br/>
+<h1>Edit Profie </h1>
+
+<br/> <br/>
+<div class = "form-group">
+    <form method ="Post" enctype = "multipart/form-data" > 
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+
+    <button class="btn btn-outline-secondary"> Update </button>
+</div>    
+</form>
+
+{% else %}
+YOU ARE NOT ALLOWED HERE 
+{{ profile.user.id  }}
+
+{% endif %}
+{% endblock  %}

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ post.title_Tag }}{% endblock title %}
+
+
+{% block content %}
+
+<h1> {{ post.title }} </h1>
+<small> {{ post.category }} -
+  By: {{ post.author.first_name }} {{ post.author.last_name }}
+  {{ post.post_date }} -
+
+
+  {% if user.is_authenticated and user.id == post.author.id %}
+
+
+  <small><a href=" {% url 'update_post' post.pk %} "style="text-decoration: none;"> Edit </a> </small>
+  <small><a href=" {% url 'delete_post' post.pk %} "style="text-decoration: none;"> Delete </a> </small>
+
+  {% endif %}
+
+</small>
+
+{% if post.header_image %}
+<img src="{{ post.header_image.url }}" width="1200" height="300"  >
+{% endif %}
+<br />
+<hr>
+
+<br />
+{{ post.body|safe }}
+
+<br />
+<a href=" {% url 'home' %} " class="btn btn-secondary btn-lg"> Back </a>
+
+<br /><br />
+<hr>
+
+<form action="{% url 'like_post' post.pk %}" method="POST">
+  {% csrf_token %}
+
+
+  {% if user.is_authenticated %}
+  {% if not liked %}
+
+  <button type="submit" class="btn btn-primary btn-sm" name="post_id" value="{{ post.id }}">
+    Like
+  </button>
+  {% else %}
+  <button type="submit" class="btn btn-danger btn-sm" name="post_id" value="{{ post.id }}">
+    UnLike
+  </button>
+
+  {% endif %}
+
+  {% else %}
+  <small> Login to like <br/></small>
+    {% endif %}
+    {{ total_likes }} likes
+  
+</form> 
+<br/>
+      <h2> Post creater </h2>
+    <div class="card mb-3">
+      <div class="row g-0">
+        <div class="col-md-1"> 
+        {% if  post.author.profile.profile_pic %}
+
+          <img src="{{ post.author.profile.profile_pic.url }}" class="img-fluid rounded-start" alt="...">
+        {% else %}
+            <img src= {% static 'Blogs/images/p_pic.png' %} class="img-fluid rounded-start" alt="...">
+        {% endif %}  
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{ post.author.first_name }} {{ post.author.last_name }}</h5>
+            <p class="small text-muted">
+
+            {% if post.author.profile %} 
+              <a href="{% url 'profile_page' post.author.profile.id  %}"style="text-decoration: none;"> Profie </a> 
+                {% endif %}
+              {% if post.author.profile.website_url %} 
+              <a href="{{ post.author.profile.website_url  }}"style="text-decoration: none;"> Website </a> 
+                {% endif %}
+
+              {% if post.author.profile.facebook_url %} 
+              <a href="{{ post.author.profile.facebook_url  }}"style="text-decoration: none;">Facebook </a>
+                {% endif %}
+
+              {% if post.author.profile.twitter_url %}
+               <a href="{{ post.author.profile.twitter_url  }}"style="text-decoration: none;"> Twitter </a>
+                {% endif %}
+
+              {% if post.author.profile.instagram_url %}
+               <a href="{{ post.author.profile.instagram_url  }}" style="text-decoration: none;"> Instagram </a>
+                {% endif %}
+            </p>
+
+
+            <p class="card-text">{{ post.author.profile.bio }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+<div class="my-3 p-3 bg-body rounded shadow">
+    <h6 class="border-bottom pb-2 mb-0">Comments...</h6>
+ 
+    {% if user.is_authenticated %} 
+          
+     
+      <form class="form-floating" action="{% url 'add_comment' post.pk %}" method="POST">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingPassword" name ="comment" placeholder="add comment" required>
+        <label >add comment..</label>
+        </div>
+
+      </form>
+
+    {% endif %}
+
+
+  {% if not post.comment.all %}
+         <p class="text-muted">   Not any comment Yet .. </p>
+    {% else %}
+
+    {% for comment in post.comment.all %}
+     
+       <div class="d-flex text-muted pt-3">
+
+        <div class="bd-placeholder-img flex-shrink-0 me-2 rounded"> 
+        {% if post.comment.user.profile.profile_pic %}
+            <img src ={{ post.comment.user.profile.profile_pic.url  }} width="32" height="32" class ="rounded-circle"  >
+          {% else %}
+            <img src= {% static 'Blogs/images/p_pic.png' %} width="32" height="32" class ="rounded-circle"  > </div>
+        {% endif %}
+      
+    
+      <p class="pb-3 mb-0   lh-sm border-bottom">
+        <strong class="d-block text-gray-dark"> {{ comment.user.first_name }}  {{ comment.user.last_name }}-
+            {{ comment.date_added }}</strong>
+         {{ comment.body }}
+      </p>
+    </div> 
+
+    {% endfor %}
+
+  {% endif %}
+
+
+
+
+    
+   
+  </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1> Posts </h1>
+<hr>
+
+
+{% for post in object_list %}
+
+<div class ="my-4 p-2 bg-body rounded ">
+    <a href="{% url 'article_detail' post.pk %}" style="text-decoration: none;">
+        <h3>{{ post.title }} </h3>
+    </a>
+    <small class="text-muted mx-2" > 
+        <a href="{% url 'category' post.category|slugify %}" style="text-decoration: none;"> 
+                    {{ post.category }} 
+               </a>     
+        by: {{ post.author.first_name }} {{ post.author.last_name }}
+        .{{ post.post_date }} </small> 
+
+    <div class ="mx-2">
+    {{ post.snippet }}
+    </div>
+    {% if user.is_authenticated and user.id == post.author.id  %}
+
+    <small><a href=" {% url 'update_post' post.pk %} "style="text-decoration: none;"> Edit </a> </small>
+    <small><a href=" {% url 'delete_post' post.pk %} "style="text-decoration: none;"> Delete </a> </small>
+
+    {% endif %}
+    <br />
+    <br />
+    </div>
+
+
+
+    {% endfor %}
+    </ul>
+
+
+    {% endblock %}

@@ -1,0 +1,29 @@
+
+{% extends 'base.html' %}
+ {% block title %}Edit Profie Page{% endblock title %}
+ {% block content %}
+
+{% if user.is_authenticated and user.id == profile.user.id %}
+
+<br/>
+<br/>
+<h1>Edit Profie Page </h1>
+
+<br/> <br/>
+<div class = "form-group">
+    <form method ="Post"enctype = "multipart/form-data" > 
+    {% csrf_token %}
+       {{ form.media }}
+    {{ form.as_p }}
+
+    <button class="btn btn-outline-secondary"> Update Profie Page </button>
+</form>
+
+</div> 
+
+
+{% else %}
+YOU ARE NOT ALLOWED HERE 
+
+{% endif %}
+{% endblock  %}
