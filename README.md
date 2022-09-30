@@ -1,1 +1,1 @@
-# Blog_website
+# Queries
